@@ -46,7 +46,7 @@ tokens :-
   \[     {tok LeftSquareBracket   }
   \]     {tok RightSquareBracket  }
   \;     { tok SemiColon  }
-  @int   { tok_app (\s -> Int    (read . filter (== '_') $ s))}
+  @int   { tok_app (\s -> Int (read . filter (/= '_') $ s))}
   let    { tok Let    }
   \=     { tok Equals }
   @var { tok_app (Var . fromString) }
@@ -62,11 +62,11 @@ tok'
   -> Parser Token
 tok' f (LexInput {lex_pos = pos, prev_char = chr, input_string = input}) len = do
   let tokenLen = fromIntegral len
-  let srcSpan = Info.mkSrcSpanLen (lexPosToSrcPos pos) tokenLen 
+  let srcSpan = Info.mkSrcSpanLen (lexPosToSrcPos pos) tokenLen
   return $
     Token srcSpan (f (Char8.take (fromIntegral len) input))
 
-tok 
+tok
   :: TokenType
   -> LexInput
   -> Int
@@ -74,14 +74,15 @@ tok
 tok x = tok' (const x)
 
 tok_app
-  :: (String -> TokenType) 
+  :: (String -> TokenType)
   -> LexInput
   -> Int
   -> Parser Token
 tok_app f = tok' (\s -> f (Char8.unpack s))
 
 
-data Token = Token
+data Token =
+  Token
   { getSrcSpan :: !Info.SrcSpan
   , getToken  :: !TokenType
   }
@@ -112,7 +113,7 @@ unVar :: TokenType -> ShortByteString
 unVar (Var c) = c
 unVar _ = error "Token.x.unVar: used on argument without Var"
 
-  
+
 lexPosMove :: LexPos -> Char -> LexPos
 lexPosMove (LexPos l c a) '\t' =
   LexPos l  (c+8-((c-1) `mod` 8)) (a + 1)
@@ -131,7 +132,6 @@ alexGetByte LexInput{..} =
     Just (w, rest) ->
       let
         c = ByteString.w2c w
-        
         new_pos = lexPosMove lex_pos c
         !newLexInput = LexInput
           { lex_pos = new_pos
