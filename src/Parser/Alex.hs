@@ -7,6 +7,7 @@ module Parser.Alex
   , lexer
   , runParser
   , lexTokens
+  , pretty
   )
   where
 
@@ -28,6 +29,7 @@ import qualified Data.ByteString.Internal as ByteString
 
 -- text
 import qualified Data.Text as Text
+import Data.Text (Text)
 
 -- lens
 import qualified Control.Lens as Lens
@@ -101,3 +103,24 @@ getAlexInput = do
 alexSetInput :: LexInput -> Parser ()
 alexSetInput lex_input = do
   _lex_input .= lex_input
+
+--------------------------------------------------
+-- pretty print tokens
+
+pretty :: Token -> String
+pretty = \case
+  Token _ t -> show t
+  EOF -> "EOF"
+
+
+prettyToken :: TokenType -> Text
+prettyToken = \case
+  LeftRoundBracket    -> "("
+  RightRoundBracket   -> ")"
+  LeftSquareBracket   -> undefined
+  RightSquareBracket  -> undefined
+  SemiColon           -> undefined
+  Int n               -> undefined
+  Let                 -> undefined
+  Equals              -> undefined
+  Var sbstr           -> undefined
