@@ -13,8 +13,9 @@ common defaults
     -Wall
     -Wincomplete-patterns
     -fwrite-ide-info
-    -hiedir=.hie         
-       
+    -hiedir=.hie
+    -Wmissing-home-modules
+
   default-extensions:
     GADTs
     ScopedTypeVariables
@@ -44,7 +45,7 @@ common defaults
     , lens
     , mtl
     , prettyprinter
-    , prettyprinter-ansi-terminal    
+    , prettyprinter-ansi-terminal
     , text
     , transformers
     , QuickCheck
