@@ -10,7 +10,9 @@ import qualified Data.ByteString as ByteString
 
 main :: IO ()
 main = do
-  input <- ByteString.readFile "input.seb"
+  input <- ByteString.readFile "examples/basic.seb"
+  print input
+  putStrLn ""
   case (runParser lexTokens input) of
     Left err -> print err
-    Right tokens -> print tokens
+    Right tokens -> print . fmap pretty $ tokens
